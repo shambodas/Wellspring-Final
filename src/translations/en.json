@@ -1,0 +1,222 @@
+{
+  "navbar": {
+    "home": "Home",
+    "moodTracker": "Mood",
+    "aiChat": "AI Chat",
+    "journal": "Journal",
+    "soundTherapy": "Sound",
+    "breathing": "Breathing",
+    "therapy": "Therapy",
+    "resources": "Resources",
+    "community": "Community",
+    "premium": "Premium"
+  },
+  "homepage": {
+    "hero": {
+      "title": "Your Mental Health Journey Starts Here",
+      "subtitle": "Comprehensive support for your well-being with AI-powered guidance, professional therapy, and community connection.",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More"
+    },
+    "features": {
+      "moodTracker": "Mood Tracker",
+      "moodTrackerDesc": "Track your emotional patterns and gain insights into your mental health journey",
+      "aiChat": "AI Chat Support",
+      "aiChatDesc": "Get instant support and guidance from our AI-powered mental health assistant",
+      "journal": "Digital Journal",
+      "journalDesc": "Express your thoughts and track your personal growth journey",
+      "soundTherapy": "Sound Therapy",
+      "soundTherapyDesc": "Relax with curated audio experiences designed for mental wellness",
+      "breathing": "Breathing Exercises",
+      "breathingDesc": "Learn breathing techniques for stress relief and emotional regulation",
+      "therapy": "Therapy",
+      "therapyDesc": "Connect with licensed mental health professionals for personalized care",
+      "screening": "Mental Health Screening",
+      "screeningDesc": "Take evidence-based assessments to understand your mental health status",
+      "resources": "Resource Hub",
+      "resourcesDesc": "Access comprehensive mental health resources and educational content",
+      "community": "Community Support",
+      "communityDesc": "Connect with others on similar mental health journeys"
+    },
+    "screening": {
+      "title": "Mental Health Screening",
+      "subtitle": "Take evidence-based assessments to understand your mental health status",
+      "phq9": "PHQ-9 Depression Assessment",
+      "phq9Desc": "A 9-question depression screening tool used by healthcare professionals",
+      "gad7": "GAD-7 Anxiety Assessment",
+      "gad7Desc": "A 7-question anxiety screening tool for generalized anxiety disorder",
+      "takeAssessment": "Take Assessment",
+      "aboutAssessments": "About These Assessments",
+      "aboutAssessmentsDesc": "These are validated screening tools used by mental health professionals. Results are for informational purposes only and should not replace professional diagnosis."
+    }
+  },
+  "moodTracker": {
+    "title": "Mood Tracker",
+    "subtitle": "Track your daily emotions and discover patterns in your mental wellness journey",
+    "logTodayMood": "Log Today's Mood",
+    "howAreYouFeeling": "How are you feeling right now?",
+    "addNote": "Add a note (optional)",
+    "notePlaceholder": "What's contributing to this mood? Any thoughts you'd like to capture?",
+    "saveMood": "Save Mood Entry",
+    "moodSavedSuccess": "Mood saved successfully!",
+    "averageMood": "Average Mood",
+    "dayStreak": "Day Streak",
+    "totalEntries": "Total Entries",
+    "thisWeek": "This Week",
+    "today": "Today",
+    "moodTrends": "Mood Trends",
+    "moods": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "okay": "Okay",
+      "bad": "Bad",
+      "terrible": "Terrible"
+    },
+    "moodHistory": "Mood History",
+    "insights": "Insights",
+    "resources": "Resources",
+    "chatWithAI": "Chat with AI Support",
+    "bookTherapy": "Book Therapy",
+    "crisisResources": "Crisis Resources"
+  },
+  "chat": {
+    "title": "AI Chat Support",
+    "subtitle": "Get instant support and guidance from our AI-powered mental health assistant",
+    "welcome": "Hello! I'm your Wellspring AI companion. I'm here to listen, support, and help you navigate whatever you're going through. How are you feeling today? 😊",
+    "placeholder": "Type your message here...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "suggestions": "Quick Actions",
+    "joinCommunity": "Join Support Community",
+    "findGroups": "Find Local Groups",
+    "bookTherapy": "Book Therapy",
+    "volunteer": "Volunteer Opportunities"
+  },
+  "journal": {
+    "title": "Personal Journal",
+    "subtitle": "Your private space for reflection, gratitude, and personal growth",
+    "totalEntries": "Total Entries",
+    "wordsWritten": "Words Written",
+    "thisWeek": "This Week",
+    "private": "Private",
+    "startWriting": "Start Writing Today",
+    "startWritingDesc": "Express your thoughts, track your progress, and reflect on your journey",
+    "newEntry": "New Entry",
+    "needInspiration": "Need inspiration? Try these prompts:",
+    "editEntry": "Edit Entry",
+    "newJournalEntry": "New Journal Entry",
+    "entryTitlePlaceholder": "Entry title (optional)",
+    "contentPlaceholder": "Start writing your thoughts...",
+    "tags": "Tags",
+    "save": "Save Entry",
+    "entries": "Journal Entries",
+    "noEntries": "No journal entries yet. Start writing to track your journey.",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "soundTherapy": {
+    "title": "Sound Therapy",
+    "subtitle": "Immerse yourself in healing sounds designed to calm your mind and restore balance",
+    "categories": {
+      "nature": "Nature Sounds",
+      "meditation": "Meditation",
+      "sleep": "Sleep",
+      "focus": "Focus",
+      "relaxation": "Relaxation"
+    },
+    "play": "Play",
+    "pause": "Pause",
+    "stop": "Stop",
+    "volume": "Volume"
+  },
+  "breathing": {
+    "title": "Breathing Exercises",
+    "subtitle": "Harness the power of breath to reduce stress, increase focus, and improve well-being",
+    "techniques": {
+      "box": "Box Breathing",
+      "triangle": "Triangle Breathing",
+      "coherence": "Heart Coherence",
+      "relaxation": "Relaxation Breathing"
+    },
+    "start": "Start Exercise",
+    "pause": "Pause",
+    "reset": "Reset",
+    "inhale": "Breathe In",
+    "exhale": "Breathe Out",
+    "hold": "Hold",
+    "pause": "Pause",
+    "getReady": "Get ready...",
+    "breathe": "Breathe"
+  },
+  "therapy": {
+    "title": "Therapy",
+    "subtitle": "Connect with licensed mental health professionals for personalized care and support",
+    "findTherapist": "Find Your Perfect Therapist",
+    "specialty": "Specialty",
+    "language": "Language",
+    "bookSession": "Book a Session",
+    "consultants": "Our Consultants",
+    "specialties": "Specialties",
+    "experience": "Experience",
+    "bookNow": "Book Now",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "confirmBooking": "Confirm Booking"
+  },
+  "resources": {
+    "title": "Resource Hub",
+    "subtitle": "Access comprehensive mental health resources and educational content",
+    "categories": {
+      "articles": "Articles",
+      "videos": "Videos",
+      "podcasts": "Podcasts",
+      "books": "Books",
+      "apps": "Apps",
+      "guidedMeditation": "Guided Meditation",
+      "stressRelief": "Stress Relief Audio",
+      "examAnxiety": "Exam Anxiety Guide"
+    },
+    "readMore": "Read More",
+    "watch": "Watch",
+    "listen": "Listen",
+    "download": "Download"
+  },
+  "community": {
+    "title": "Community & Peer Support",
+    "subtitle": "Connect with others on their wellness journey. Share, support, and grow together.",
+    "shareSomething": "Share something with the community...",
+    "tabs": {
+      "feed": "Community Feed",
+      "peer": "Peer Support",
+      "groups": "Support Groups",
+      "guidelines": "Guidelines"
+    },
+    "newPost": "New Post",
+    "post": "Post",
+    "like": "Like",
+    "reply": "Reply",
+    "share": "Share",
+    "categories": {
+      "general": "General Discussion",
+      "anxiety": "Anxiety Support",
+      "depression": "Depression Support",
+      "stress": "Stress Management",
+      "recovery": "Recovery Stories"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "back": "Back",
+    "continue": "Continue"
+  }
+}
