@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Crown, Star, Zap, Shield, Users, Heart, Calendar, X, Sparkles } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const Subscription = () => {
+  const navigate = useNavigate()
   const [billingCycle, setBillingCycle] = useState('monthly')
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
@@ -125,7 +127,8 @@ const Subscription = () => {
 
   const handleSelectPlan = (plan) => {
     if (plan.id === 'free') {
-      // Handle free plan signup
+      // Navigate to AI chat page for free plan
+      navigate('/chat')
       return
     }
     setSelectedPlan(plan)
