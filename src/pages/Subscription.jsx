@@ -216,7 +216,7 @@ const Subscription = () => {
                         ₹{plan.price[billingCycle]}
                       </span>
                       <span className="text-secondary-500 ml-1">
-                        /{plan.id === 'professional' ? plan.price.period : (billingCycle === 'yearly' ? 'year' : 'month')}
+                        /{plan.id === 'professional' && billingCycle === 'monthly' ? plan.price.period : (billingCycle === 'yearly' ? 'year' : 'month')}
                       </span>
                     </div>
                     {billingCycle === 'yearly' && plan.price.yearly > 0 && (
