@@ -91,8 +91,12 @@ const Navbar = () => {
                   to={item.path}
                   className={`px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     location.pathname === item.path
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300'
-                      : 'text-secondary-600 hover:bg-primary-50 hover:text-primary-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400'
+                      ? (item.name === 'Admin'
+                          ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm dark:from-primary-600 dark:to-primary-700'
+                          : 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300')
+                      : (item.name === 'Admin'
+                          ? 'text-primary-600 border border-primary-200 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-800 dark:hover:bg-gray-800'
+                          : 'text-secondary-600 hover:bg-primary-50 hover:text-primary-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400')
                   }`}
                 >
                   {item.name}
@@ -108,8 +112,12 @@ const Navbar = () => {
                   to={item.path}
                   className={`px-2 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     location.pathname === item.path
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300'
-                      : 'text-secondary-600 hover:bg-primary-50 hover:text-primary-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400'
+                      ? (item.name === 'Admin'
+                          ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm dark:from-primary-600 dark:to-primary-700'
+                          : 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300')
+                      : (item.name === 'Admin'
+                          ? 'text-primary-600 border border-primary-200 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-800 dark:hover:bg-gray-800'
+                          : 'text-secondary-600 hover:bg-primary-50 hover:text-primary-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400')
                   }`}
                 >
                   {item.name}
@@ -142,8 +150,12 @@ const Navbar = () => {
                           onClick={() => setIsMoreOpen(false)}
                           className={`block px-3 py-2 text-sm font-medium transition-all duration-200 ${
                             location.pathname === item.path
-                              ? 'bg-primary-50 text-primary-700 dark:bg-primary-900 dark:text-primary-300'
-                              : 'text-secondary-600 hover:bg-primary-50 hover:text-primary-600 dark:text-gray-300 dark:hover:bg-gray-700'
+                              ? (item.name === 'Admin'
+                                  ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white dark:from-primary-600 dark:to-primary-700'
+                                  : 'bg-primary-50 text-primary-700 dark:bg-primary-900 dark:text-primary-300')
+                              : (item.name === 'Admin'
+                                  ? 'text-primary-600 border border-primary-200 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-800 dark:hover:bg-gray-700'
+                                  : 'text-secondary-600 hover:bg-primary-50 hover:text-primary-600 dark:text-gray-300 dark:hover:bg-gray-700')
                           }`}
                         >
                           {item.name}

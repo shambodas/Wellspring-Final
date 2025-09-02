@@ -52,12 +52,14 @@ const ScreeningForms = () => {
     newAnswers[currentQuestion] = value
     setAnswers(newAnswers)
 
-    // Move to next question or finish
-    if (currentQuestion < getCurrentQuestions().length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-    } else {
-      calculateResults()
-    }
+    // Briefly show selection tick before advancing
+    setTimeout(() => {
+      if (currentQuestion < getCurrentQuestions().length - 1) {
+        setCurrentQuestion(currentQuestion + 1)
+      } else {
+        calculateResults()
+      }
+    }, 250)
   }
 
   const calculateResults = () => {

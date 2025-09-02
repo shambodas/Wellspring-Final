@@ -297,40 +297,7 @@ const TherapyBooking = () => {
           </div>
         </motion.div>
 
-        {/* Pricing Comparison */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="floating-card mb-8 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200"
-        >
-          <div className="text-center mb-6">
-            <p className="text-secondary-600">Professional mental health support at accessible prices</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-white rounded-xl border border-green-200">
-              <div className="text-3xl font-bold text-green-600 mb-2">₹600</div>
-              <div className="text-sm text-secondary-600 mb-2">Starting Price</div>
-              <div className="text-xs text-green-600">Most affordable option</div>
-            </div>
-            <div className="text-center p-4 bg-white rounded-xl border border-blue-200">
-              <div className="text-3xl font-bold text-blue-600 mb-2">₹850</div>
-              <div className="text-sm text-secondary-600 mb-2">Average Price</div>
-              <div className="text-xs text-blue-600">Balanced quality & cost</div>
-            </div>
-            <div className="text-center p-4 bg-white rounded-xl border border-purple-200">
-              <div className="text-3xl font-bold text-purple-600 mb-2">₹1200</div>
-              <div className="text-sm text-secondary-600 mb-2">Premium Price</div>
-              <div className="text-xs text-purple-600">Specialized expertise</div>
-            </div>
-          </div>
-          
-          <div className="text-center mt-4">
-            <p className="text-sm text-secondary-600">
-              💡 <strong>Save up to 60%</strong> compared to traditional therapy costs
-            </p>
-          </div>
-        </motion.div>
+        {/* Pricing Comparison removed as requested */}
 
         {bookingStep === 1 && (
           <>
