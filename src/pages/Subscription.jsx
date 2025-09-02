@@ -17,14 +17,14 @@ const Subscription = () => {
       popular: false,
       features: [
         'Basic mood tracking',
-        'AI chat (10 messages/day)',
+        'AI Chat',
         'Sound therapy (limited)',
         'Basic breathing exercises',
         'Community access (view only)',
         'Mobile app access'
       ],
       limitations: [
-        'Limited AI conversations',
+        'Unlimited AI conversation',
         'No advanced analytics',
         'No therapy booking',
         'Basic support only'
@@ -34,7 +34,7 @@ const Subscription = () => {
       id: 'premium',
       name: 'Premium',
       subtitle: 'Comprehensive wellness tools',
-      price: { monthly: 499, yearly: 4990 },
+      price: { monthly: 399, yearly: 3591 },
       color: 'from-primary-500 to-primary-600',
       popular: true,
       features: [
@@ -55,7 +55,7 @@ const Subscription = () => {
       id: 'professional',
       name: 'Professional',
       subtitle: 'Complete mental health solution',
-      price: { monthly: 999, yearly: 9990 },
+      price: { monthly: 999, yearly: 8991, period: '3 months' },
       color: 'from-purple-500 to-indigo-600',
       popular: false,
       features: [
@@ -120,7 +120,7 @@ const Subscription = () => {
   ]
 
   const getDiscountPercentage = () => {
-    return Math.round((1 - (plans.find(p => p.id === 'premium').price.yearly / 12) / plans.find(p => p.id === 'premium').price.monthly) * 100)
+    return 25
   }
 
   const handleSelectPlan = (plan) => {
@@ -209,20 +209,26 @@ const Subscription = () => {
 
               {/* Pricing */}
               <div className="text-center mb-6">
-                <div className="flex items-baseline justify-center">
-                  <span className="text-4xl font-bold text-secondary-800">
-                    ₹{plan.price[billingCycle]}
-                  </span>
-                  {plan.price[billingCycle] > 0 && (
-                    <span className="text-secondary-500 ml-1">
-                      /{billingCycle === 'yearly' ? 'year' : 'month'}
-                    </span>
-                  )}
-                </div>
-                {billingCycle === 'yearly' && plan.price.yearly > 0 && (
-                  <p className="text-sm text-green-600 mt-1">
-                    Save ₹{(plan.price.monthly * 12) - plan.price.yearly} annually
-                  </p>
+                {plan.price[billingCycle] > 0 ? (
+                  <>
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-4xl font-bold text-secondary-800">
+                        ₹{plan.price[billingCycle]}
+                      </span>
+                      <span className="text-secondary-500 ml-1">
+                        /{plan.id === 'professional' ? plan.price.period : (billingCycle === 'yearly' ? 'year' : 'month')}
+                      </span>
+                    </div>
+                    {billingCycle === 'yearly' && plan.price.yearly > 0 && (
+                      <p className="text-sm text-green-600 mt-1">
+                        Save ₹{(plan.price.monthly * 12) - plan.price.yearly} annually
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-4xl font-bold text-secondary-800">
+                    NA
+                  </div>
                 )}
               </div>
 
@@ -375,7 +381,7 @@ const Subscription = () => {
                   <h3 className="text-2xl font-bold text-secondary-800">{selectedPlan.name} Plan</h3>
                   <p className="text-4xl font-bold text-primary-600 my-2">
                     ₹{selectedPlan.price[billingCycle]}
-                    <span className="text-lg text-secondary-500">/{billingCycle === 'yearly' ? 'year' : 'month'}</span>
+                    <span className="text-lg text-secondary-500">/{selectedPlan.id === 'professional' ? selectedPlan.price.period : (billingCycle === 'yearly' ? 'year' : 'month')}</span>
                   </p>
                 </div>
 
