@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, TrendingUp, BarChart3, Plus, CheckCircle, AlertCircle, TreePine, Leaf, Flower2, Sprout } from 'lucide-react'
+import { Calendar, TrendingUp, BarChart3, Plus, CheckCircle } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
-import { format, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay, subWeeks, startOfMonth, endOfMonth, eachDayOfInterval as eachDayOfMonth } from 'date-fns'
+import { format, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay, subWeeks } from 'date-fns'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const MoodTracker = () => {
@@ -12,7 +12,6 @@ const MoodTracker = () => {
   const [moodEntries, setMoodEntries] = useState([])
   const [currentWeek, setCurrentWeek] = useState(new Date())
   const [showSuccess, setShowSuccess] = useState(false)
-  const [showMoodTree, setShowMoodTree] = useState(false)
 
   const moods = [
     { id: 1, emoji: '😢', label: 'Very Sad', value: 1, color: 'from-red-400 to-red-500' },
@@ -157,98 +156,7 @@ const MoodTracker = () => {
     return streak
   }
 
-  const getMonthDays = () => {
-    const start = startOfMonth(new Date())
-    const end = endOfMonth(new Date())
-    return eachDayOfMonth({ start, end })
-  }
-
-  const getMoodTreeData = () => {
-    const monthDays = getMonthDays()
-    const treeData = monthDays.map(day => {
-      const moodEntry = moodEntries.find(entry => isSameDay(entry.date, day))
-      return {
-        date: day,
-        mood: moodEntry ? moodEntry.mood.value : null,
-        hasEntry: !!moodEntry
-      }
-    })
-    return treeData
-  }
-
-  const getTreeGrowth = () => {
-    const positiveMoods = moodEntries.filter(entry => entry.mood.value >= 4).length
-    const totalEntries = moodEntries.length
-    
-    if (totalEntries === 0) return 0
-    return Math.min(100, (positiveMoods / totalEntries) * 100)
-  }
-
-  const getTreeElements = () => {
-    const growth = getTreeGrowth()
-    const elements = []
-    
-    // Base trunk
-    elements.push({
-      type: 'trunk',
-      x: 50,
-      y: 80,
-      size: 20 + (growth / 10),
-      color: '#8B4513'
-    })
-    
-    // Branches based on growth
-    if (growth > 20) {
-      elements.push({
-        type: 'branch',
-        x: 35,
-        y: 60,
-        rotation: -30,
-        size: 15 + (growth / 15),
-        color: '#654321'
-      })
-      elements.push({
-        type: 'branch',
-        x: 65,
-        y: 60,
-        rotation: 30,
-        size: 15 + (growth / 15),
-        color: '#654321'
-      })
-    }
-    
-    // Leaves based on positive moods
-    const positiveMoods = moodEntries.filter(entry => entry.mood.value >= 4)
-    positiveMoods.forEach((entry, index) => {
-      if (index < 20) { // Limit to 20 leaves
-        elements.push({
-          type: 'leaf',
-          x: 40 + Math.random() * 20,
-          y: 30 + Math.random() * 30,
-          rotation: Math.random() * 360,
-          size: 8 + Math.random() * 4,
-          color: ['#228B22', '#32CD32', '#90EE90'][Math.floor(Math.random() * 3)]
-        })
-      }
-    })
-    
-    // Flowers based on very happy moods
-    const veryHappyMoods = moodEntries.filter(entry => entry.mood.value === 5)
-    veryHappyMoods.forEach((entry, index) => {
-      if (index < 10) { // Limit to 10 flowers
-        elements.push({
-          type: 'flower',
-          x: 45 + Math.random() * 10,
-          y: 25 + Math.random() * 25,
-          rotation: Math.random() * 360,
-          size: 6 + Math.random() * 4,
-          color: ['#FF69B4', '#FF1493', '#FFB6C1', '#FFC0CB'][Math.floor(Math.random() * 4)]
-        })
-      }
-    })
-    
-    return elements
-  }
+  
 
   const weekDays = getWeekDays(currentWeek)
   const chartData = getChartData()
@@ -285,152 +193,7 @@ const MoodTracker = () => {
           )}
         </AnimatePresence>
 
-        {/* Mood Tree Toggle */}
-        <div className="text-center mb-6">
-          <button
-            onClick={() => setShowMoodTree(!showMoodTree)}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-200 flex items-center space-x-2 mx-auto"
-          >
-            <TreePine className="w-5 h-5" />
-            <span>{showMoodTree ? 'Hide Mood Tree' : 'Show Mood Tree'}</span>
-          </button>
-        </div>
-
-        {/* Mood Tree Visualization */}
-        {showMoodTree && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="floating-card mb-8"
-          >
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-semibold text-secondary-800 mb-2">Your Monthly Mood Tree</h2>
-              <p className="text-secondary-600">Watch your tree grow with positive moods!</p>
-            </div>
-            
-            <div className="relative h-96 bg-gradient-to-b from-blue-100 to-green-100 rounded-xl overflow-hidden">
-              {/* Sky gradient */}
-              <div className="absolute inset-0 bg-gradient-to-b from-blue-200 via-blue-100 to-green-100"></div>
-              
-              {/* Tree elements */}
-              <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-                {getTreeElements().map((element, index) => {
-                  if (element.type === 'trunk') {
-                    return (
-                      <rect
-                        key={index}
-                        x={element.x - element.size/2}
-                        y={element.y - element.size/2}
-                        width={element.size}
-                        height={element.size * 2}
-                        fill={element.color}
-                        rx={element.size/4}
-                      />
-                    )
-                  } else if (element.type === 'branch') {
-                    return (
-                      <rect
-                        key={index}
-                        x={element.x - element.size/2}
-                        y={element.y - element.size/2}
-                        width={element.size}
-                        height={element.size * 1.5}
-                        fill={element.color}
-                        rx={element.size/4}
-                        transform={`rotate(${element.rotation} ${element.x} ${element.y})`}
-                      />
-                    )
-                  } else if (element.type === 'leaf') {
-                    return (
-                      <ellipse
-                        key={index}
-                        cx={element.x}
-                        cy={element.y}
-                        rx={element.size}
-                        ry={element.size * 0.6}
-                        fill={element.color}
-                        transform={`rotate(${element.rotation} ${element.x} ${element.y})`}
-                      />
-                    )
-                  } else if (element.type === 'flower') {
-                    return (
-                      <g key={index} transform={`translate(${element.x}, ${element.y}) rotate(${element.rotation})`}>
-                        {[0, 60, 120, 180, 240, 300].map((angle, i) => (
-                          <ellipse
-                            key={i}
-                            cx={0}
-                            cy={-element.size * 0.8}
-                            rx={element.size * 0.4}
-                            ry={element.size * 0.6}
-                            fill={element.color}
-                            transform={`rotate(${angle})`}
-                          />
-                        ))}
-                        <circle cx="0" cy="0" r={element.size * 0.3} fill="#FFD700" />
-                      </g>
-                    )
-                  }
-                  return null
-                })}
-              </svg>
-              
-              {/* Growth indicator */}
-              <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3">
-                <div className="flex items-center space-x-2">
-                  <Sprout className="w-5 h-5 text-green-600" />
-                  <div>
-                    <div className="text-sm font-medium text-secondary-800">Tree Growth</div>
-                    <div className="text-lg font-bold text-green-600">{Math.round(getTreeGrowth())}%</div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Stats */}
-              <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3">
-                <div className="text-center">
-                  <div className="text-sm font-medium text-secondary-800">Positive Days</div>
-                  <div className="text-lg font-bold text-green-600">
-                    {moodEntries.filter(entry => entry.mood.value >= 4).length}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Monthly calendar view */}
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-secondary-800 mb-4 text-center">Monthly Mood Calendar</h3>
-              <div className="grid grid-cols-7 gap-1">
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                  <div key={day} className="text-center text-xs font-medium text-secondary-600 py-2">
-                    {day}
-                  </div>
-                ))}
-                {getMonthDays().map((day, index) => {
-                  const moodEntry = moodEntries.find(entry => isSameDay(entry.date, day))
-                  const isToday = isSameDay(day, new Date())
-                  
-                  return (
-                    <div key={index} className="text-center p-1">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm mx-auto ${
-                        isToday ? 'border-2 border-primary-500 bg-primary-50' : ''
-                      }`}>
-                        {moodEntry ? (
-                          <div className="text-lg" title={`${moodEntry.mood.label} - ${moodEntry.mood.emoji}`}>
-                            {moodEntry.mood.emoji}
-                          </div>
-                        ) : (
-                          <div className="text-xs text-secondary-400">
-                            {format(day, 'd')}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          </motion.div>
-        )}
+        
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Mood Logger */}
