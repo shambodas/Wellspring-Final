@@ -4,8 +4,8 @@
 export const GEMINI_CONFIG = {
   API_KEY: 'AIzaSyBuH-UZPOhn49CGd6-MgWcoYqRV6_tr2hs', 
   MODEL: 'gemini-2.0-flash',
-  MAX_TOKENS: 1000,
-  TEMPERATURE: 0.7,
+  MAX_TOKENS: 1600,
+  TEMPERATURE: 0.4,
   SAFETY_SETTINGS: [
     {
       category: 'HARM_CATEGORY_HARASSMENT',

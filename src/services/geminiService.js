@@ -65,9 +65,9 @@ export const generateMentalHealthResponse = async (userMessage, context = {}, mo
       }
     }
 
-    // Prepare conversation history
+    // Prepare conversation history (last 8 turns for better context)
     const conversationHistory = context.messages ? 
-      context.messages.slice(-5).map(msg => ({
+      context.messages.slice(-8).map(msg => ({
         role: msg.isBot ? 'assistant' : 'user',
         content: msg.text
       })) : []
@@ -77,15 +77,16 @@ export const generateMentalHealthResponse = async (userMessage, context = {}, mo
       .replace('{context}', context.topics?.join(', ') || 'General conversation')
       .replace('{mood}', mood || 'neutral')
 
-    // Prepare the full conversation
-    const fullConversation = [
-      { role: 'user', content: systemPrompt },
-      ...conversationHistory,
-      { role: 'user', content: userMessage }
-    ]
+    // Build a richer prompt with brief conversation summary and guidance
+    const historyText = conversationHistory.map(h => `${h.role === 'user' ? 'User' : 'Assistant'}: ${h.content}`).join('\n')
+    const fullPrompt = `${systemPrompt}
 
-    // Generate response using direct API call
-    const fullPrompt = `${systemPrompt}\n\nUser: ${userMessage}\n\nAssistant:`
+Recent conversation:
+${historyText || 'None'}
+
+User: ${userMessage}
+
+Assistant (empathetic, concise, specific, avoids medical diagnosis, offers 1-3 practical steps and a gentle follow-up question):`
     const responseText = await callGeminiAPI(fullPrompt)
 
     // Analyze response for emotion
