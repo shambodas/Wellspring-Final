@@ -79,7 +79,7 @@ const Subscription = () => {
 
   const testimonials = [
     {
-      name: "Sarah K.",
+      name: "Anindita K.",
       plan: "Premium",
       rating: 5,
       text: "The unlimited AI chat and therapy consultation have been game-changers for my mental health journey."

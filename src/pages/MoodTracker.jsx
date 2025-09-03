@@ -12,6 +12,12 @@ const MoodTracker = () => {
   const [moodEntries, setMoodEntries] = useState([])
   const [currentWeek, setCurrentWeek] = useState(new Date())
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showMoodHistory, setShowMoodHistory] = useState(false)
+  const [selectedTimeframe, setSelectedTimeframe] = useState('week')
+
+
+  
+
 
   const moods = [
     { id: 1, emoji: '😢', label: 'Very Sad', value: 1, color: 'from-red-400 to-red-500' },
@@ -68,6 +74,8 @@ const MoodTracker = () => {
       ]
     }
   }
+
+
 
   useEffect(() => {
     // Load mood entries from localStorage
@@ -156,6 +164,51 @@ const MoodTracker = () => {
     return streak
   }
 
+  const getMoodTrend = () => {
+    if (moodEntries.length < 2) return 'stable'
+    
+    const recentEntries = moodEntries.slice(-7) // Last 7 entries
+    if (recentEntries.length < 2) return 'stable'
+    
+    const firstHalf = recentEntries.slice(0, Math.floor(recentEntries.length / 2))
+    const secondHalf = recentEntries.slice(Math.floor(recentEntries.length / 2))
+    
+    const firstAvg = firstHalf.reduce((sum, entry) => sum + entry.mood.value, 0) / firstHalf.length
+    const secondAvg = secondHalf.reduce((sum, entry) => sum + entry.mood.value, 0) / secondHalf.length
+    
+    const difference = secondAvg - firstAvg
+    
+    if (difference > 0.5) return 'improving'
+    if (difference < -0.5) return 'declining'
+    return 'stable'
+  }
+
+  const getMoodDistribution = () => {
+    const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+    moodEntries.forEach(entry => {
+      distribution[entry.mood.value]++
+    })
+    return distribution
+  }
+
+  const getMostCommonMood = () => {
+    const distribution = getMoodDistribution()
+    const mostCommon = Object.keys(distribution).reduce((a, b) => 
+      distribution[a] > distribution[b] ? a : b
+    )
+    return moods.find(mood => mood.value === parseInt(mostCommon))
+  }
+
+  const getCurrentWeekEntries = () => {
+    const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 })
+    const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 })
+    
+    return moodEntries.filter(entry => {
+      const entryDate = new Date(entry.date)
+      return entryDate >= weekStart && entryDate <= weekEnd
+    })
+  }
+
   
 
   const weekDays = getWeekDays(currentWeek)
@@ -164,6 +217,7 @@ const MoodTracker = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-100">
       <div className="max-w-6xl mx-auto p-4">
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -252,22 +306,38 @@ const MoodTracker = () => {
                 {t('moodTracker.saveMood')}
               </button>
 
-              {/* Today's Insights */}
+              {/* Enhanced Mood Insights */}
               {selectedMood && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-6 p-4 bg-gradient-to-r from-primary-25 to-accent-25 rounded-xl border border-primary-100"
                 >
-                  <h3 className="font-semibold text-primary-800 mb-2">
-                    {moodInsights[selectedMood.id].title}
-                  </h3>
-                  <div className="space-y-2 mb-4">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="text-3xl">{selectedMood.emoji}</div>
+                    <div>
+                      <h3 className="font-semibold text-primary-800">
+                        {moodInsights[selectedMood.id].title}
+                      </h3>
+                      <p className="text-sm text-primary-600">
+                        {selectedMood.value <= 2 ? "It's okay to feel this way. Here are some ways to help:" :
+                         selectedMood.value === 3 ? "A neutral day. Consider some gentle activities:" :
+                         "Great to see you're feeling good! Here's how to maintain this:"}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3 mb-4">
                     {moodInsights[selectedMood.id].suggestions.map((suggestion, index) => (
-                      <p key={index} className="text-sm text-primary-700">• {suggestion}</p>
+                      <div key={index} className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-primary-400 rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-sm text-primary-700">{suggestion}</p>
+                      </div>
                     ))}
                   </div>
+                  
                   <div className="space-y-2">
+                    <p className="text-xs text-primary-600 font-medium mb-2">Helpful Resources:</p>
                     {moodInsights[selectedMood.id].resources.map((resource, index) => (
                       <a
                         key={index}
@@ -285,8 +355,8 @@ const MoodTracker = () => {
 
           {/* Stats and Calendar */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Enhanced Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -295,7 +365,12 @@ const MoodTracker = () => {
               >
                 <TrendingUp className="w-8 h-8 text-primary-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-secondary-800">{getAverageMood()}</div>
-                <div className="text-sm text-secondary-600">{t('moodTracker.averageMood')}</div>
+                <div className="text-sm text-secondary-600">Average Mood</div>
+                <div className="text-xs text-primary-600 mt-1">
+                  {getMoodTrend() === 'improving' && '↗ Improving'}
+                  {getMoodTrend() === 'declining' && '↘ Declining'}
+                  {getMoodTrend() === 'stable' && '→ Stable'}
+                </div>
               </motion.div>
 
               <motion.div
@@ -306,7 +381,10 @@ const MoodTracker = () => {
               >
                 <Calendar className="w-8 h-8 text-accent-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-secondary-800">{getMoodStreak()}</div>
-                <div className="text-sm text-secondary-600">{t('moodTracker.dayStreak')}</div>
+                <div className="text-sm text-secondary-600">Day Streak</div>
+                <div className="text-xs text-accent-600 mt-1">
+                  {getMoodStreak() >= 7 ? '🔥 Great!' : 'Keep going!'}
+                </div>
               </motion.div>
 
               <motion.div
@@ -317,9 +395,97 @@ const MoodTracker = () => {
               >
                 <BarChart3 className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-secondary-800">{moodEntries.length}</div>
-                <div className="text-sm text-secondary-600">{t('moodTracker.totalEntries')}</div>
+                <div className="text-sm text-secondary-600">Total Entries</div>
+                <div className="text-xs text-yellow-600 mt-1">
+                  {getMostCommonMood() && `${getMostCommonMood().emoji} Most common`}
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="floating-card text-center cursor-pointer hover:shadow-lg transition-all duration-200"
+                onClick={() => setShowMoodHistory(!showMoodHistory)}
+              >
+                <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-secondary-800">{getCurrentWeekEntries().length}</div>
+                <div className="text-sm text-secondary-600">This Week</div>
+                <div className="text-xs text-green-600 mt-1">📊 View Details</div>
               </motion.div>
             </div>
+
+            {/* Detailed Mood History */}
+            {showMoodHistory && (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="floating-card"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold text-secondary-800">Mood Analysis</h2>
+                  <button
+                    onClick={() => setShowMoodHistory(false)}
+                    className="text-secondary-500 hover:text-secondary-700 transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Mood Distribution Chart */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium text-secondary-800 mb-4">Mood Distribution</h3>
+                  <div className="space-y-3">
+                    {moods.map((mood) => {
+                      const count = getMoodDistribution()[mood.value]
+                      const percentage = moodEntries.length > 0 ? (count / moodEntries.length) * 100 : 0
+                      return (
+                        <div key={mood.id} className="flex items-center space-x-3">
+                          <div className="text-2xl w-8">{mood.emoji}</div>
+                          <div className="flex-1">
+                            <div className="flex justify-between text-sm mb-1">
+                              <span className="text-secondary-700">{mood.label}</span>
+                              <span className="text-secondary-600">{count} ({percentage.toFixed(1)}%)</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div 
+                                className={`h-2 rounded-full bg-gradient-to-r ${mood.color}`}
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Recent Entries */}
+                <div>
+                  <h3 className="text-lg font-medium text-secondary-800 mb-4">Recent Entries</h3>
+                  <div className="space-y-3 max-h-64 overflow-y-auto">
+                    {moodEntries.slice(-10).reverse().map((entry) => (
+                      <div key={entry.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                        <div className="text-2xl">{entry.mood.emoji}</div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <div className="font-medium text-secondary-800">{entry.mood.label}</div>
+                              {entry.note && (
+                                <div className="text-sm text-secondary-600 mt-1">{entry.note}</div>
+                              )}
+                            </div>
+                            <div className="text-xs text-secondary-500">
+                              {format(entry.date, 'MMM d, h:mm a')}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
 
             {/* Weekly Calendar */}
             <motion.div

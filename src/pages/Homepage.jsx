@@ -390,7 +390,7 @@ const Homepage = () => {
             <h3 className="text-2xl font-semibold text-primary-800 mb-6 text-center">
               {t('homepage.screening.aboutAssessments')}
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-6 h-6 text-white" />
@@ -418,6 +418,14 @@ const Homepage = () => {
                   If you're experiencing severe symptoms or thoughts of self-harm, please contact a mental health professional immediately.
                 </p>
               </div>
+            </div>
+            
+            {/* Learn More Button */}
+            <div className="text-center">
+              <Link to="/screening" className="btn-secondary inline-flex items-center space-x-2">
+                <span>Learn More About All Assessments</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </motion.div>
         </div>
