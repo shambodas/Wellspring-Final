@@ -1,13 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, Crown, Star, Zap, Shield, Users, Heart, Calendar, X, Sparkles } from 'lucide-react'
+import { Check, Crown, Star, Zap, Shield, Users, Heart, Calendar, X, Sparkles, Coins } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { getMindCoinSummary, redeemMindCoins } from '../services/mindCoinService'
+import MindCoinSlider from '../components/ui/MindCoinSlider'
 
 const Subscription = () => {
   const navigate = useNavigate()
   const [billingCycle, setBillingCycle] = useState('monthly')
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [mindCoinSummary, setMindCoinSummary] = useState(null)
+  const [mindCoinsToRedeem, setMindCoinsToRedeem] = useState(0)
+  const [orderId, setOrderId] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const plans = [
     {
@@ -125,6 +131,29 @@ const Subscription = () => {
     return 25
   }
 
+  // Load Mind Coin summary
+  useEffect(() => {
+    const loadMindCoinSummary = async () => {
+      try {
+        const summary = await getMindCoinSummary()
+        setMindCoinSummary(summary)
+      } catch (error) {
+        console.error('Error loading mind coin summary:', error)
+      }
+    }
+    loadMindCoinSummary()
+  }, [])
+
+  const calculateFinalPrice = (plan) => {
+    const basePrice = plan.price[billingCycle]
+    const discount = Math.floor(mindCoinsToRedeem / 10)
+    return Math.max(0, basePrice - discount)
+  }
+
+  const handleMindCoinChange = (value) => {
+    setMindCoinsToRedeem(value)
+  }
+
   const handleSelectPlan = (plan) => {
     if (plan.id === 'free') {
       // Navigate to AI chat page for free plan
@@ -132,7 +161,31 @@ const Subscription = () => {
       return
     }
     setSelectedPlan(plan)
+    setMindCoinsToRedeem(0) // Reset Mind Coins selection
+    setOrderId(`order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
     setShowPaymentModal(true)
+  }
+
+  const handleStartTrial = async () => {
+    if (!selectedPlan || !orderId) return
+
+    setLoading(true)
+    try {
+      // If Mind Coins are being redeemed, apply them first
+      if (mindCoinsToRedeem > 0) {
+        await redeemMindCoins(orderId, mindCoinsToRedeem)
+      }
+
+      // Here you would typically integrate with your payment processor
+      // For now, we'll just show a success message
+      alert(`Successfully started ${selectedPlan.name} trial!`)
+      setShowPaymentModal(false)
+    } catch (error) {
+      console.error('Error starting trial:', error)
+      alert('Error starting trial. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -150,6 +203,28 @@ const Subscription = () => {
           <p className="text-secondary-600 mb-6">
             Unlock your full mental health potential with our comprehensive plans
           </p>
+          
+          {/* Mind Coins Info */}
+          {mindCoinSummary && mindCoinSummary.balance > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-200 rounded-xl p-4 mb-6 max-w-2xl mx-auto"
+            >
+              <div className="flex items-center justify-center space-x-3">
+                <Coins className="w-6 h-6 text-primary-600" />
+                <div className="text-center">
+                  <p className="text-primary-700 font-medium">
+                    You have {mindCoinSummary.balance.toLocaleString()} Mind Coins
+                  </p>
+                  <p className="text-primary-600 text-sm">
+                    Worth ₹{Math.floor(mindCoinSummary.balance / 10)} in subscription discounts
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
           
           {/* Billing Toggle */}
           <div className="inline-flex bg-white rounded-xl p-1 shadow-md">
@@ -382,11 +457,41 @@ const Subscription = () => {
                     )}
                   </div>
                   <h3 className="text-2xl font-bold text-secondary-800">{selectedPlan.name} Plan</h3>
-                  <p className="text-4xl font-bold text-primary-600 my-2">
-                    ₹{selectedPlan.price[billingCycle]}
+                  
+                  {/* Pricing with Mind Coins discount */}
+                  <div className="my-4">
+                    {mindCoinsToRedeem > 0 ? (
+                      <div>
+                        <div className="text-lg text-secondary-500 line-through">
+                          ₹{selectedPlan.price[billingCycle]}
+                        </div>
+                        <div className="text-4xl font-bold text-green-600">
+                          ₹{calculateFinalPrice(selectedPlan)}
+                        </div>
+                        <div className="text-sm text-green-600 mt-1">
+                          You saved ₹{Math.floor(mindCoinsToRedeem / 10)} with Mind Coins!
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-4xl font-bold text-primary-600">
+                        ₹{selectedPlan.price[billingCycle]}
+                      </div>
+                    )}
                     <span className="text-lg text-secondary-500">/{selectedPlan.id === 'professional' ? selectedPlan.price.period : (billingCycle === 'yearly' ? 'year' : 'month')}</span>
-                  </p>
+                  </div>
                 </div>
+
+                {/* Mind Coins Section */}
+                {mindCoinSummary && mindCoinSummary.balance > 0 && (
+                  <div className="mb-6">
+                    <MindCoinSlider
+                      balance={mindCoinSummary.balance}
+                      maxRedeemable={selectedPlan.price[billingCycle] * 10} // Max coins = full price * 10
+                      onValueChange={handleMindCoinChange}
+                      className="mb-4"
+                    />
+                  </div>
+                )}
 
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                   <p className="text-green-700 font-medium text-center">
@@ -398,8 +503,12 @@ const Subscription = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <button className="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-200">
-                    Start Free Trial
+                  <button 
+                    onClick={handleStartTrial}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? 'Processing...' : 'Start Free Trial'}
                   </button>
                   <button
                     onClick={() => setShowPaymentModal(false)}

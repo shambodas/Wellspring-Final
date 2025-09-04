@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Droplets, User, Crown, ChevronDown, Shield, Sun, Moon } from 'lucide-react'
+import { Menu, X, Droplets, User, Crown, ChevronDown, Shield, Sun, Moon, Coins } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import LanguageSelector from './LanguageSelector'
 
@@ -53,10 +53,10 @@ const Navbar = () => {
     { name: t('navbar.home'), path: '/' },
     { name: t('navbar.moodTracker'), path: '/mood-tracker' },
     { name: t('navbar.aiChat'), path: '/chat' },
-    { name: t('navbar.journal'), path: '/journal' },
-    { name: t('navbar.soundTherapy'), path: '/sound-therapy' },
     { name: t('navbar.breathing'), path: '/breathing-exercises' },
+    { name: t('navbar.journal'), path: '/journal' },
     { name: t('navbar.therapy'), path: '/therapy-booking' },
+    { name: t('navbar.soundTherapy'), path: '/sound-therapy' },
     { name: t('navbar.resources'), path: '/resource-hub' },
     { name: t('navbar.community'), path: '/community' },
     { name: t('navbar.premium'), path: '/subscription' },
@@ -179,6 +179,13 @@ const Navbar = () => {
               </button>
               
               <LanguageSelector />
+              <Link
+                to="/wallet"
+                className="p-2 rounded-lg text-secondary-600 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400"
+                title="Mind Coins Wallet"
+              >
+                <Coins size={20} />
+              </Link>
               <button className="p-2 rounded-lg text-secondary-600 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400">
                 <User size={20} />
               </button>
@@ -196,6 +203,13 @@ const Navbar = () => {
               </button>
               
               <LanguageSelector />
+              <Link
+                to="/wallet"
+                className="p-2 rounded-lg text-secondary-600 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400"
+                title="Mind Coins Wallet"
+              >
+                <Coins size={18} />
+              </Link>
               <button className="p-2 rounded-lg text-secondary-600 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-primary-400">
                 <User size={18} />
               </button>
@@ -238,6 +252,16 @@ const Navbar = () => {
                 ))}
 
                 
+                {/* Wallet Link in Mobile Menu */}
+                <Link
+                  to="/wallet"
+                  onClick={() => setIsOpen(false)}
+                  className="block px-3 py-2 rounded-lg text-sm font-medium text-secondary-600 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 dark:text-gray-300 dark:hover:bg-gray-800 flex items-center space-x-2"
+                >
+                  <Coins className="w-4 h-4" />
+                  <span>Mind Coins Wallet</span>
+                </Link>
+
                 {/* Dark Mode Toggle in Mobile Menu */}
                 <button
                   onClick={toggleDarkMode}

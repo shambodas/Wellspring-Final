@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Pause, RotateCcw, Settings, Volume2, VolumeX, Wind } from 'lucide-react'
+import { Play, Pause, RotateCcw, Settings, Volume2, VolumeX, Wind, Coins, Gift } from 'lucide-react'
 import { useLanguage } from '../contexts/LanguageContext'
+import { awardMindCoins } from '../services/mindCoinService'
 
 const BreathingExercises = () => {
   const { t } = useLanguage()
@@ -17,6 +18,10 @@ const BreathingExercises = () => {
     hapticFeedback: true
   })
   const [showSettings, setShowSettings] = useState(false)
+  const [sessionStartTime, setSessionStartTime] = useState(null)
+  const [sessionId, setSessionId] = useState(null)
+  const [showRewardModal, setShowRewardModal] = useState(false)
+  const [rewardData, setRewardData] = useState(null)
   const intervalRef = useRef(null)
   const audioRef = useRef(null)
 
@@ -174,6 +179,11 @@ const BreathingExercises = () => {
     setCycleCount(0)
     setIsActive(false)
     
+    // Generate session ID and start time
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    setSessionId(newSessionId)
+    setSessionStartTime(Date.now())
+    
     // Start preparation countdown
     setTimeout(() => {
       setCurrentPhase('inhale')
@@ -196,6 +206,26 @@ const BreathingExercises = () => {
     setCycleCount(0)
     setTimeRemaining(0)
     setSelectedExercise(null)
+    setSessionId(null)
+    setSessionStartTime(null)
+  }
+
+  const handleSessionComplete = async () => {
+    if (!sessionId || !sessionStartTime) return
+
+    const sessionDuration = Math.floor((Date.now() - sessionStartTime) / 1000)
+    
+    // Only award coins if session was at least 1 minute
+    if (sessionDuration >= 60) {
+      try {
+        const result = await awardMindCoins(sessionId, sessionDuration)
+        setRewardData(result)
+        setShowRewardModal(true)
+      } catch (error) {
+        console.error('Error awarding mind coins:', error)
+        // Show error message but don't block the user
+      }
+    }
   }
 
   const getPhaseInstruction = () => {
@@ -390,6 +420,22 @@ const BreathingExercises = () => {
               </button>
             </div>
 
+            {/* Complete Session Button */}
+            {cycleCount > 0 && (
+              <div className="text-center mb-8">
+                <button
+                  onClick={handleSessionComplete}
+                  className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-200 flex items-center space-x-2 mx-auto"
+                >
+                  <Coins className="w-5 h-5" />
+                  <span>Complete Session & Earn Mind Coins</span>
+                </button>
+                <p className="text-sm text-secondary-600 mt-2">
+                  Complete at least 1 minute to earn 10 Mind Coins
+                </p>
+              </div>
+            )}
+
             {/* Progress */}
             <div className="floating-card text-center">
               <div className="grid grid-cols-3 gap-4">
@@ -459,6 +505,104 @@ const BreathingExercises = () => {
                 >
                   Save Settings
                 </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Reward Modal */}
+        <AnimatePresence>
+          {showRewardModal && rewardData && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+              onClick={() => setShowRewardModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.8, opacity: 0, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white rounded-2xl p-8 max-w-md w-full text-center"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  className="w-20 h-20 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6"
+                >
+                  <Coins className="w-10 h-10 text-white" />
+                </motion.div>
+                
+                <h3 className="text-2xl font-bold text-secondary-800 mb-2">
+                  🎉 Great Job!
+                </h3>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="text-3xl font-bold text-green-600 mb-1">
+                      +{rewardData.coinsEarned} Mind Coins
+                    </div>
+                    <p className="text-green-700 text-sm">
+                      Earned for completing breathing exercise
+                    </p>
+                  </div>
+                  
+                  {rewardData.bonusCoins > 0 && (
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                      <div className="flex items-center justify-center space-x-2 mb-2">
+                        <Gift className="w-5 h-5 text-purple-600" />
+                        <span className="text-lg font-bold text-purple-600">
+                          +{rewardData.bonusCoins} Bonus Coins
+                        </span>
+                      </div>
+                      <p className="text-purple-700 text-sm">
+                        Streak milestone bonus!
+                      </p>
+                    </div>
+                  )}
+                  
+                  <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+                    <div className="text-lg font-semibold text-primary-600 mb-1">
+                      New Balance: {rewardData.newBalance.toLocaleString()}
+                    </div>
+                    <p className="text-primary-700 text-sm">
+                      Worth ₹{Math.floor(rewardData.newBalance / 10)} in discounts
+                    </p>
+                  </div>
+                  
+                  {rewardData.streakDays > 0 && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <div className="text-lg font-semibold text-orange-600 mb-1">
+                        Current Streak: {rewardData.streakDays} days
+                      </div>
+                      <p className="text-orange-700 text-sm">
+                        Keep it up for more rewards!
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setShowRewardModal(false)}
+                    className="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-200"
+                  >
+                    Continue
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowRewardModal(false)
+                      // Navigate to wallet
+                      window.location.href = '/wallet'
+                    }}
+                    className="w-full border border-primary-200 text-primary-600 py-3 px-6 rounded-xl font-medium hover:bg-primary-50 transition-all duration-200"
+                  >
+                    View Wallet
+                  </button>
+                </div>
               </motion.div>
             </motion.div>
           )}

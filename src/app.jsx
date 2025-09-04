@@ -24,6 +24,7 @@ import ScreeningForms from './pages/ScreeningForms'
 import AppointmentBooking from './pages/AppointmentBooking'
 import ResourceHub from './pages/ResourceHub'
 import AdminDashboard from './pages/AdminDashboard'
+import Wallet from './pages/Wallet'
 
 import GeminiTest from './components/GeminiTest'
 
@@ -99,6 +100,7 @@ function App() {
             <Route path="/screening" element={<ScreeningForms />} />
             <Route path="/appointment-booking" element={<AppointmentBooking />} />
             <Route path="/resource-hub" element={<ResourceHub />} />
+            <Route path="/wallet" element={<Wallet />} />
             <Route path="/admin" element={<AdminDashboard />} />
 
             <Route path="/test" element={<GeminiTest />} />
