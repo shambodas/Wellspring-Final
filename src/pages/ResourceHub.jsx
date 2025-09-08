@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Download, ExternalLink, BookOpen, Headphones, Video, FileText, Search, Filter, Heart, Clock, Users } from 'lucide-react'
+import { Play, Download, ExternalLink, BookOpen, Headphones, Video, FileText, Search, Filter, Heart, Clock, Users, X, Pause } from 'lucide-react'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const ResourceHub = () => {
@@ -8,6 +8,9 @@ const ResourceHub = () => {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [favorites, setFavorites] = useState([])
+  const [playingVideo, setPlayingVideo] = useState(null)
+  const [playingAudio, setPlayingAudio] = useState(null)
+  const [audioPlayers, setAudioPlayers] = useState({})
 
   const categories = [
     { id: 'all', name: 'All Resources', icon: <BookOpen className="w-4 h-4" /> },
@@ -22,45 +25,45 @@ const ResourceHub = () => {
     // Videos
     {
       id: 1,
-      title: "Understanding Anxiety: A Complete Guide",
+      title: "10-Minute Meditation For Anxiety",
       description: "Learn about anxiety symptoms, causes, and effective treatment approaches from leading mental health experts.",
       category: "videos",
       type: "video",
-      duration: "15:30",
-      thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      tags: ["anxiety", "education", "treatment"],
+      duration: "10:43",
+      thumbnail: "https://img.youtube.com/vi/IzFObkVRSV0/maxresdefault.jpg",
+      url: "https://www.youtube.com/embed/IzFObkVRSV0",
+      tags: ["anxiety", "meditation", "treatment"],
       views: 15420,
       rating: 4.8
     },
     {
       id: 2,
-      title: "Mindfulness Meditation for Beginners",
+      title: "Anxiety Attack Help - Make them STOP! (ASMR)",
       description: "A gentle introduction to mindfulness meditation with guided instructions and breathing techniques.",
       category: "videos",
       type: "video",
-      duration: "12:45",
-      thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      tags: ["meditation", "mindfulness", "beginners"],
+      duration: "15:32",
+      thumbnail: "https://img.youtube.com/vi/Evgx9yX2Vw8/maxresdefault.jpg",
+      url: "https://www.youtube.com/embed/Evgx9yX2Vw8",
+      tags: ["anxiety", "asmr", "help"],
       views: 8920,
       rating: 4.9
     },
     {
       id: 3,
-      title: "Coping with Depression: Practical Strategies",
+      title: "Guided Meditation for Stress and Anxiety, 20 minute mindfulness meditation",
       description: "Evidence-based strategies for managing depression symptoms and improving mental well-being.",
       category: "videos",
       type: "video",
-      duration: "18:20",
-      thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      tags: ["depression", "coping", "strategies"],
+      duration: "20:10",
+      thumbnail: "https://img.youtube.com/vi/qKcRUOWYQ9w/maxresdefault.jpg",
+      url: "https://www.youtube.com/embed/qKcRUOWYQ9w",
+      tags: ["meditation", "stress", "mindfulness"],
       views: 12340,
       rating: 4.7
     },
 
-    // Audio Guides
+    // Audio Guides - Using real URLs from university counseling centers and health organizations
     {
       id: 4,
       title: "Progressive Muscle Relaxation",
@@ -69,7 +72,8 @@ const ResourceHub = () => {
       type: "audio",
       duration: "20:15",
       thumbnail: "/audio/relaxation.jpg",
-      url: "/audio/progressive-relaxation.mp3",
+      url: "https://services.unimelb.edu.au/counsel/resources/progressive-muscle-relaxation.mp3",
+      downloadUrl: "https://services.unimelb.edu.au/counsel/resources/progressive-muscle-relaxation.mp3",
       tags: ["relaxation", "stress-relief", "sleep"],
       views: 5670,
       rating: 4.8
@@ -82,7 +86,8 @@ const ResourceHub = () => {
       type: "audio",
       duration: "10:30",
       thumbnail: "/audio/breathing.jpg",
-      url: "/audio/breathing-exercises.mp3",
+      url: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Breathing_Space_5min.mp3",
+      downloadUrl: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Breathing_Space_5min.mp3",
       tags: ["breathing", "anxiety", "calm"],
       views: 7890,
       rating: 4.9
@@ -95,13 +100,14 @@ const ResourceHub = () => {
       type: "audio",
       duration: "25:00",
       thumbnail: "/audio/sleep.jpg",
-      url: "/audio/sleep-meditation.mp3",
+      url: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Body_Scan_Sleep_20min.mp3",
+      downloadUrl: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Body_Scan_Sleep_20min.mp3",
       tags: ["sleep", "meditation", "rest"],
       views: 11230,
       rating: 4.8
     },
 
-    // PDF Guides
+    // PDF Guides - Using real downloadable PDFs from mental health organizations
     {
       id: 7,
       title: "Stress Management Workbook",
@@ -110,7 +116,8 @@ const ResourceHub = () => {
       type: "pdf",
       duration: "45 pages",
       thumbnail: "/pdfs/stress-workbook.jpg",
-      url: "/pdfs/stress-management-workbook.pdf",
+      url: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Stress%20(Adults)/Stress%20-%20Workbook%20-%20Adults.pdf",
+      downloadUrl: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Stress%20(Adults)/Stress%20-%20Workbook%20-%20Adults.pdf",
       tags: ["stress", "workbook", "exercises"],
       views: 3450,
       rating: 4.6
@@ -123,7 +130,8 @@ const ResourceHub = () => {
       type: "pdf",
       duration: "32 pages",
       thumbnail: "/pdfs/cbt-guide.jpg",
-      url: "/pdfs/cbt-guide.pdf",
+      url: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Depression%20(Adults)/Depression%20-%20Module%207%20-%20Unhelpful%20Thinking%20Styles.pdf",
+      downloadUrl: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Depression%20(Adults)/Depression%20-%20Module%207%20-%20Unhelpful%20Thinking%20Styles.pdf",
       tags: ["CBT", "therapy", "thoughts"],
       views: 2890,
       rating: 4.7
@@ -136,7 +144,8 @@ const ResourceHub = () => {
       type: "pdf",
       duration: "28 pages",
       thumbnail: "/pdfs/self-care.jpg",
-      url: "/pdfs/self-care-toolkit.pdf",
+      url: "https://www.mentalhealthfirstaid.org/wp-content/uploads/2016/07/2016_MHFAider_Reference_Guide.pdf",
+      downloadUrl: "https://www.mentalhealthfirstaid.org/wp-content/uploads/2016/07/2016_MHFAider_Reference_Guide.pdf",
       tags: ["self-care", "wellness", "toolkit"],
       views: 4560,
       rating: 4.8
@@ -151,7 +160,8 @@ const ResourceHub = () => {
       type: "audio",
       duration: "15:45",
       thumbnail: "/audio/loving-kindness.jpg",
-      url: "/audio/loving-kindness.mp3",
+      url: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Loving_Kindness_15min.mp3",
+      downloadUrl: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Loving_Kindness_15min.mp3",
       tags: ["meditation", "compassion", "kindness"],
       views: 6780,
       rating: 4.9
@@ -164,7 +174,8 @@ const ResourceHub = () => {
       type: "audio",
       duration: "18:30",
       thumbnail: "/audio/body-scan.jpg",
-      url: "/audio/body-scan.mp3",
+      url: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Body_Scan_20min.mp3",
+      downloadUrl: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Body_Scan_20min.mp3",
       tags: ["meditation", "body", "mindfulness"],
       views: 5230,
       rating: 4.7
@@ -179,21 +190,22 @@ const ResourceHub = () => {
       type: "pdf",
       duration: "15 pages",
       thumbnail: "/pdfs/crisis-coping.jpg",
-      url: "/pdfs/crisis-coping-strategies.pdf",
+      url: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Panic%20(Adults)/Panic%20-%20Module%204%20-%20Panic%20Control%20Treatment.pdf",
+      downloadUrl: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Panic%20(Adults)/Panic%20-%20Module%204%20-%20Panic%20Control%20Treatment.pdf",
       tags: ["crisis", "coping", "emergency"],
       views: 2340,
       rating: 4.8
     },
     {
       id: 13,
-      title: "Emotional Regulation Techniques",
+      title: "Anxiety Coping Skills for Teens & Young Adults!",
       description: "Learn practical techniques to manage intense emotions and maintain emotional balance.",
       category: "coping",
       type: "video",
-      duration: "14:20",
-      thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      tags: ["emotions", "regulation", "balance"],
+      duration: "11:30",
+      thumbnail: "https://img.youtube.com/vi/MIr3RsUWrdo/maxresdefault.jpg",
+      url: "https://www.youtube.com/embed/MIr3RsUWrdo",
+      tags: ["anxiety", "coping", "teens"],
       views: 9870,
       rating: 4.6
     },
@@ -206,8 +218,8 @@ const ResourceHub = () => {
       category: "meditation",
       type: "video",
       duration: "20:00",
-      thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      thumbnail: "https://img.youtube.com/vi/ZToicYcHIOU/maxresdefault.jpg",
+      url: "https://www.youtube.com/embed/ZToicYcHIOU",
       tags: ["meditation", "hindi", "relaxation"],
       views: 3450,
       rating: 4.8,
@@ -221,7 +233,8 @@ const ResourceHub = () => {
       type: "audio",
       duration: "15:30",
       thumbnail: "/audio/stress-relief-bengali.jpg",
-      url: "/audio/stress-relief-bengali.mp3",
+      url: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Three_Step_Breathing_Space_5min.mp3",
+      downloadUrl: "https://www.uclahealth.org/sites/default/files/documents/uclamindful/Three_Step_Breathing_Space_5min.mp3",
       tags: ["stress-relief", "bengali", "relaxation"],
       views: 2780,
       rating: 4.7,
@@ -235,7 +248,8 @@ const ResourceHub = () => {
       type: "pdf",
       duration: "12 pages",
       thumbnail: "/pdfs/exam-anxiety-tamil.jpg",
-      url: "/exam-anxiety-guide-tamil.pdf",
+      url: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Anxiety%20(Adults)/Anxiety%20-%20Module%201%20-%20What%20is%20Anxiety.pdf",
+      downloadUrl: "https://www.cci.health.wa.gov.au/docs/Info%20Sheets/Anxiety%20(Adults)/Anxiety%20-%20Module%201%20-%20What%20is%20Anxiety.pdf",
       tags: ["exam-anxiety", "tamil", "students"],
       views: 1890,
       rating: 4.9,
@@ -288,6 +302,50 @@ const ResourceHub = () => {
     }
   }
 
+  const playVideo = (resource) => {
+    setPlayingVideo(resource)
+  }
+
+  const closeVideoPlayer = () => {
+    setPlayingVideo(null)
+  }
+
+  const playAudio = (resource) => {
+    // Stop any currently playing audio
+    if (playingAudio && audioPlayers[playingAudio.id]) {
+      audioPlayers[playingAudio.id].pause()
+    }
+
+    if (playingAudio?.id === resource.id) {
+      setPlayingAudio(null)
+      return
+    }
+
+    const audio = new Audio(resource.url)
+    setAudioPlayers(prev => ({ ...prev, [resource.id]: audio }))
+    setPlayingAudio(resource)
+
+    audio.play().catch(error => {
+      console.error('Audio playback failed:', error)
+      alert('Audio playback failed. This might be due to CORS restrictions in the demo.')
+    })
+
+    audio.onended = () => {
+      setPlayingAudio(null)
+    }
+  }
+
+  const downloadResource = (resource) => {
+    const url = resource.downloadUrl || resource.url
+    const link = document.createElement('a')
+    link.href = url
+    link.download = resource.title
+    link.target = '_blank'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-100">
       <div className="max-w-7xl mx-auto p-4">
@@ -298,10 +356,10 @@ const ResourceHub = () => {
           className="text-center py-8"
         >
           <h1 className="text-3xl lg:text-4xl font-display font-bold gradient-text mb-2">
-            {t('resources.title')}
+            Mental Health Resource Hub
           </h1>
           <p className="text-secondary-600 max-w-2xl mx-auto">
-            {t('resources.subtitle')}
+            Access our comprehensive library of videos, audio guides, PDFs, and meditation resources to support your mental well-being journey.
           </p>
         </motion.div>
 
@@ -309,7 +367,7 @@ const ResourceHub = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="floating-card mb-8"
+          className="bg-white rounded-xl shadow-lg p-6 mb-8"
         >
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
@@ -354,19 +412,20 @@ const ResourceHub = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="floating-card hover:shadow-xl transition-all duration-300 group"
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden"
             >
               {/* Resource Thumbnail */}
               <div className="relative mb-4">
-                <div className="aspect-video bg-gradient-to-br from-secondary-200 to-secondary-300 rounded-lg overflow-hidden">
+                <div className="aspect-video bg-gradient-to-br from-secondary-200 to-secondary-300 rounded-t-xl overflow-hidden">
                   {resource.type === 'video' ? (
-                    <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-full h-full flex items-center justify-center bg-cover bg-center"
+                         style={{ backgroundImage: `url(${resource.thumbnail})` }}>
                       <div className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
                         <Play className="w-8 h-8 text-primary-600 ml-1" />
                       </div>
                     </div>
                   ) : (
-                    <div className={`w-full h-full bg-gradient-to-br ${getResourceColor(resource.type)} flex items-center justify-center`}>
+                    <div className={`w-full h-full bg-gradient-to-br ${getResourceColor(resource.type)} flex items-center justify-center text-white`}>
                       {getResourceIcon(resource.type)}
                     </div>
                   )}
@@ -403,8 +462,8 @@ const ResourceHub = () => {
               </div>
 
               {/* Resource Content */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-secondary-800 group-hover:text-primary-600 transition-colors duration-200">
+              <div className="p-6 space-y-3">
+                <h3 className="text-lg font-semibold text-secondary-800 group-hover:text-primary-600 transition-colors duration-200 line-clamp-2">
                   {resource.title}
                 </h3>
                 
@@ -438,23 +497,35 @@ const ResourceHub = () => {
                 {/* Action Buttons */}
                 <div className="flex space-x-2 pt-2">
                   {resource.type === 'video' ? (
-                    <button className="flex-1 bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <button 
+                      onClick={() => playVideo(resource)}
+                      className="flex-1 bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors duration-200 flex items-center justify-center space-x-2"
+                    >
                       <Play className="w-4 h-4" />
                       <span>Watch</span>
                     </button>
                   ) : resource.type === 'audio' ? (
-                    <button className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center justify-center space-x-2">
-                      <Headphones className="w-4 h-4" />
-                      <span>Listen</span>
+                    <button 
+                      onClick={() => playAudio(resource)}
+                      className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center justify-center space-x-2"
+                    >
+                      {playingAudio?.id === resource.id ? <Pause className="w-4 h-4" /> : <Headphones className="w-4 h-4" />}
+                      <span>{playingAudio?.id === resource.id ? 'Pause' : 'Listen'}</span>
                     </button>
                   ) : (
-                    <button className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <button 
+                      onClick={() => downloadResource(resource)}
+                      className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-200 flex items-center justify-center space-x-2"
+                    >
                       <Download className="w-4 h-4" />
                       <span>Download</span>
                     </button>
                   )}
                   
-                  <button className="p-2 border border-secondary-300 rounded-lg hover:bg-secondary-50 transition-colors duration-200">
+                  <button 
+                    onClick={() => window.open(resource.url, '_blank')}
+                    className="p-2 border border-secondary-300 rounded-lg hover:bg-secondary-50 transition-colors duration-200"
+                  >
                     <ExternalLink className="w-4 h-4 text-secondary-600" />
                   </button>
                 </div>
@@ -484,7 +555,7 @@ const ResourceHub = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-12 floating-card bg-gradient-to-r from-primary-25 to-accent-25"
+          className="mt-12 bg-gradient-to-r from-primary-50 to-accent-50 rounded-xl p-8"
         >
           <h2 className="text-2xl font-semibold text-primary-800 mb-6 text-center">
             Getting Started
@@ -519,9 +590,40 @@ const ResourceHub = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* Video Player Modal */}
+        {playingVideo && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h3 className="text-lg font-semibold text-gray-800">{playingVideo.title}</h3>
+                <button
+                  onClick={closeVideoPlayer}
+                  className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="relative" style={{ paddingTop: '56.25%' }}>
+                <iframe
+                  src={playingVideo.url}
+                  title={playingVideo.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute top-0 left-0 w-full h-full"
+                ></iframe>
+              </div>
+              <div className="p-4">
+                <p className="text-gray-600">{playingVideo.description}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
-export default ResourceHub
+export default ResourceHub      
