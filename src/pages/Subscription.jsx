@@ -27,14 +27,14 @@ const Subscription = () => {
         'Basic mood tracking',
         'AI Chat',
         'Sound therapy (limited)',
-        'Basic breathing exercises',
-        'Community access (view only)',
-        'Mobile app access'
+        'Breathing exercises',
+        'Community access',
+        'Weekly mental health tips',
+        'Mental health screening',
       ],
       limitations: [
         'Unlimited AI conversation',
         'No advanced analytics',
-        'No therapy booking',
         'Basic support only'
       ]
     },
@@ -49,6 +49,7 @@ const Subscription = () => {
         'Unlimited mood tracking with insights',
         'Unlimited AI chat conversations',
         'Full sound therapy library',
+        'All mental health screenings',
         'Advanced breathing exercises',
         'Personal journal with encryption',
         'Progress analytics & reports',
@@ -57,27 +58,30 @@ const Subscription = () => {
         '1 free therapy consultation/month',
         'Personalized recommendations'
       ],
-      limitations: []
+      limitations: [
+        'No direct therapist messaging',
+        'No family therapy sessions'
+      ]
     },
     {
       id: 'professional',
       name: 'Professional',
       subtitle: 'Complete mental health solution',
-      price: { monthly: 999, yearly: 8991, period: '3 months' },
+      price: { monthly: 599, yearly: 5391 , period: 'month' },
       color: 'from-purple-500 to-indigo-600',
       popular: false,
       features: [
         'Everything in Premium',
-        'Unlimited therapy sessions',
+        'Early access to new features',
         'Direct therapist messaging',
+        '2 free therapy consultations/month',
         'Crisis support hotline',
         'Family therapy sessions',
         'Specialized treatment plans',
         'Weekly progress reviews',
         'Advanced mental health assessments',
         'Medication tracking',
-        'White-glove support',
-        'Early access to new features'
+        
       ],
       limitations: []
     }
@@ -363,12 +367,13 @@ const Subscription = () => {
               <tbody className="text-sm">
                 {[
                   { feature: 'Mood Tracking', free: 'Basic', premium: 'Advanced', professional: 'Advanced' },
-                  { feature: 'AI Chat Messages', free: '10/day', premium: 'Unlimited', professional: 'Unlimited' },
+                  { feature: 'AI Chat Messages', free: 'unlimited', premium: 'Unlimited', professional: 'Unlimited' },
                   { feature: 'Sound Therapy', free: 'Limited', premium: 'Full Library', professional: 'Full Library' },
-                  { feature: 'Journal Entries', free: '×', premium: 'Unlimited', professional: 'Unlimited' },
-                  { feature: 'Therapy Sessions', free: '×', premium: '1/month', professional: 'Unlimited' },
+                  { feature: 'Crisis Support', free: '24/7', premium: '24/7', professional: '24/7' },
+                  { feature: 'Journal Entries', free: '✓', premium: 'Unlimited', professional: 'Unlimited' },
+                  { feature: 'Therapy Sessions', free: '×', premium: '1 free session/month', professional: '2 free sessions/month' },
                   { feature: 'Progress Analytics', free: '×', premium: '✓', professional: '✓' },
-                  { feature: 'Crisis Support', free: '×', premium: '×', professional: '24/7' },
+                  { feature: 'Therapist Messaging', free: '×', premium: '×', professional: '✓' },
                   { feature: 'Family Therapy', free: '×', premium: '×', professional: '✓' }
                 ].map((row, index) => (
                   <tr key={index} className="border-b border-secondary-100">
